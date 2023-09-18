@@ -18,7 +18,7 @@ contract SimpleDeFiLending is Ownable {
     event DepositMade(address indexed user, uint256 amount);
     event LoanTaken(address indexed user, uint256 amount);
     event LoanRepaid(address indexed user, uint256 amount, uint256 interest);
-    event CheckBalance(string text, unit amount);
+    event CheckBalance(string text, uint amount);
     
     constructor(
         address _tokenAddress,
