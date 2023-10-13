@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract SimpleDeFiLending is Ownable {
+contract SimpleDeFiLending {
+    address owner;
+
     IERC20 public token; // The token being lent
     uint256 public interestRate; // Annual interest rate (in percentage)
     uint256 public totalDeposits; // Total deposited amount
@@ -18,7 +19,7 @@ contract SimpleDeFiLending is Ownable {
     event DepositMade(address indexed user, uint256 amount);
     event LoanTaken(address indexed user, uint256 amount);
     event LoanRepaid(address indexed user, uint256 amount, uint256 interest);
-    event CheckBalance(string text, uint amount);
+    event CheckBalance(uint amount);
     
     constructor(
         address _tokenAddress,
@@ -28,6 +29,12 @@ contract SimpleDeFiLending is Ownable {
         token = IERC20(_tokenAddress);
         interestRate = _initialInterestRate;
         loanDuration = _initialLoanDuration;
+        owner = msg.sender;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only Owner can call this function");
+        _;
     }
 
     function deposit(uint256 amount) external {
@@ -68,11 +75,8 @@ contract SimpleDeFiLending is Ownable {
     }
 
     function getBalance(address user_account) external returns (uint){
-    
-       string memory data = "User Balance is : ";
        uint user_bal = user_account.balance;
        emit CheckBalance(data, user_bal );
        return (user_bal);
-
     }
 }
